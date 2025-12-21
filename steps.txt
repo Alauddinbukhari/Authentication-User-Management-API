@@ -11,5 +11,6 @@
 //restrict user without login to access certian routes
 //add forgot password functionality
 //when user login then his informatin should be visible
+//MIX CHARACTERS IN PASSWORD VALIDATION
 
 

@@ -46,21 +46,36 @@ def login():
 def signup():
     sign_up_form = Signup()
     
-    print("METHOD:", request.method)
-    print("FORM ERRORS:", sign_up_form.errors)
-    print("IS SUBMITTED:", sign_up_form.is_submitted())
-    print("VALIDATE:", sign_up_form.validate())
     
 
     if sign_up_form.validate_on_submit():
-       print(sign_up_form.first_name.data)
-       print(2)
-       redirect(url_for("login"))
+        first_name = sign_up_form.first_name.data
+        last_name = sign_up_form.last_name.data
+        email = sign_up_form.email.data
+        password = sign_up_form.password.data
 
+        new_user = User(
+            username=f"{first_name} {last_name}",
+            email=email,
+            password=password
+        )
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash('Account created successfully!', 'success')
+        return redirect(url_for('login'))
+
+        
+     
     return render_template("sign_up.html",form = sign_up_form)
 
 
-@app.route("/logout_password")
+
+
+
+
+
+@app.route("/forgot_password")
 def forgot_password():
     return "<p>forgot password</p>"
 
