@@ -39,7 +39,11 @@ with app.app_context():
     db.create_all()
 
 
-google = oauth.register( name="google", client_id=os.getenv("GOOGLE_CLIENT_ID"), client_secret=os.getenv("GOOGLE_CLIENT_SECRET"), server_metadata_url="https://accounts.google.com/.well-known/openid-configuration", client_kwargs={ "scope": "openid email profile" })
+google = oauth.register( name="google",
+                         client_id=os.getenv("GOOGLE_CLIENT_ID"),
+                         client_secret=os.getenv("GOOGLE_CLIENT_SECRET"),
+                         server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
+                        client_kwargs={ "scope": "openid email profile" })
 
 @app.route("/")
 def home():
@@ -122,8 +126,7 @@ def login_google():
 
 @app.route("/auth/callback")
 def auth_callback():
-    token = google.authorize_access_token()
-    user_info = google.get("userinfo").json()
+    token = oauth.google.authorize_access_token() # 2. Fetch user info using discovery metadata user_info = oauth.google.get("userinfo").json()
 
   
     user = User.query.filter_by(email=user_info["email"]).first()
@@ -140,7 +143,7 @@ def auth_callback():
     session["user_id"] = user.id
     session["username"] = user.username
 
-    return redirect(url_for("dashboard"))
+    return redirect(url_for("home"))
 
 
 
